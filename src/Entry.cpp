@@ -10,7 +10,7 @@
 #include <stdexcept>
 ll::Logger logger(PLUGIN_NAME);
 
-namespace change_this {
+namespace FloatingText {
 
 namespace {
 
@@ -18,46 +18,24 @@ std::unique_ptr<std::reference_wrapper<ll::plugin::NativePlugin>>
     selfPluginInstance; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
 auto disable(ll::plugin::NativePlugin& /*self*/) -> bool {
-    logger.info("disabling...");
-
-    // Your code here.
-
-    logger.info("disabled");
-
+    removeAllFloatingTexts();
     return true;
 }
 
 auto enable(ll::plugin::NativePlugin& /*self*/) -> bool {
-    logger.info("enabling...");
-
-    logger.info("enabled");
-
+    initFloatingTexts();
+    RegisterCommand();
     return true;
 }
 
 auto load(ll::plugin::NativePlugin& self) -> bool {
-    logger.info("loading...");
-
     selfPluginInstance = std::make_unique<std::reference_wrapper<ll::plugin::NativePlugin>>(self);
-
-    // Your code here.
-
-    logger.info("loaded");
-
+    initConfig();
     return true;
 }
 
 auto unload(ll::plugin::NativePlugin& self) -> bool {
-    auto& logger = self.getLogger();
-
-    logger.info("unloading...");
-
     selfPluginInstance.reset();
-
-    // Your code here.
-
-    logger.info("unloaded");
-
     return true;
 }
 
@@ -71,13 +49,17 @@ auto getSelfPluginInstance() -> ll::plugin::NativePlugin& {
     return *selfPluginInstance;
 }
 
-} // namespace change_this
+} // namespace FloatingText
 
 extern "C" {
 _declspec(dllexport) auto ll_plugin_disable(ll::plugin::NativePlugin& self) -> bool {
-    return change_this::disable(self);
+    return FloatingText::disable(self);
 }
-_declspec(dllexport) auto ll_plugin_enable(ll::plugin::NativePlugin& self) -> bool { return change_this::enable(self); }
-_declspec(dllexport) auto ll_plugin_load(ll::plugin::NativePlugin& self) -> bool { return change_this::load(self); }
-_declspec(dllexport) auto ll_plugin_unload(ll::plugin::NativePlugin& self) -> bool { return change_this::unload(self); }
+_declspec(dllexport) auto ll_plugin_enable(ll::plugin::NativePlugin& self) -> bool {
+    return FloatingText::enable(self);
+}
+_declspec(dllexport) auto ll_plugin_load(ll::plugin::NativePlugin& self) -> bool { return FloatingText::load(self); }
+_declspec(dllexport) auto ll_plugin_unload(ll::plugin::NativePlugin& self) -> bool {
+    return FloatingText::unload(self);
+}
 }
