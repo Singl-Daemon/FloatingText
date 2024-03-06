@@ -57,6 +57,7 @@ void removeAllFloatingTexts() {
     for (auto& key : RuntimeFloatingTexts) {
         delete key.second;
     }
+    RuntimeFloatingTexts.clear();
 }
 
 std::pair<int, int> getFloatingTextCount() { return {StaticFloatingTextList.size(), DynamicFloatingTextList.size()}; }

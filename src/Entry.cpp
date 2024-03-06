@@ -45,7 +45,6 @@ auto getSelfPluginInstance() -> ll::plugin::NativePlugin& {
     if (!selfPluginInstance) {
         throw std::runtime_error("selfPluginInstance is null");
     }
-
     return *selfPluginInstance;
 }
 
