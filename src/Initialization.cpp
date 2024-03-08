@@ -64,7 +64,7 @@ std::pair<int, int> getFloatingTextCount() { return {StaticFloatingTextList.size
 
 std::string tr(std::string key, std::vector<std::string> data) { return Language->translate(key, data); }
 
-void createStaticFloatingText(std::string& text, Vec3& pos, int dimId) {
+void createStaticFloatingText(std::string text, Vec3 pos, int dimId) {
     nlohmann::json json{
         {"Text",     text                                                      },
         {"Position", {{"x", pos.x}, {"y", pos.y}, {"z", pos.z}, {"dim", dimId}}}
@@ -76,7 +76,7 @@ void createStaticFloatingText(std::string& text, Vec3& pos, int dimId) {
     RuntimeFloatingTexts[ft->getRuntimeID()] = ft;
 }
 
-void createDynamicFloatingText(std::string& text, Vec3& pos, int dimId, int update) {
+void createDynamicFloatingText(std::string text, Vec3 pos, int dimId, int update) {
     nlohmann::json json{
         {"Text",       text                                                      },
         {"UpdateRate", update                                                    },

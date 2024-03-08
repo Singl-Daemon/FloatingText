@@ -27,12 +27,12 @@ void RegisterCommand() {
             return output.success(tr("command.floatingtext.reload", {S(count.first), S(count.second)}));
         }>();
     cmd.overload<FloatingTextParam>()
-        .required("gui")
+        .optional("gui")
         .execute<[](CommandOrigin const& origin, CommandOutput& output, FloatingTextParam const& param) {
             auto type = origin.getOriginType();
             if (type == CommandOriginType::Player) {
-                // todo
-                return output.success(tr("command.todo"));
+                auto pl = (Player*)origin.getEntity();
+                return addForm(*pl);
             }
             return output.error(tr("command.error.invalidCommandOrigin"));
         }>();
