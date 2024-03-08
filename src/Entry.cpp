@@ -25,6 +25,9 @@ auto disable(ll::plugin::NativePlugin& /*self*/) -> bool {
 auto enable(ll::plugin::NativePlugin& /*self*/) -> bool {
     initFloatingTexts();
     RegisterCommand();
+    logger.info(tr("info.loaded"));
+    logger.info("{}: GroupMountain", tr("info.author"));
+    logger.info("{}: https://github.com/GroupMountain/FloatingText", tr("info.repository"));
     return true;
 }
 
