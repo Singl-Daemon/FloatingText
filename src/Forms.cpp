@@ -33,7 +33,9 @@ void dynamicForm(Player& pl, std::string text, Vec3 pos, int dimId) {
         if (isNumber(srate)) {
             int rate = std::stoi(srate);
             createDynamicFloatingText(text, pos, dimId, rate);
-            return pl.sendMessage(tr("floatingText.dynamic.create.success", {text, pos.toString(), srate}));
+            return pl.sendMessage(
+                tr("command.createDynamic.success", {VanillaDimensions::toString(dimId), pos.toString(), srate})
+            );
         } else {
             return invalidInputForm(pl, tr("form.invalidInput.rate"));
         }
@@ -57,6 +59,7 @@ void addForm(Player& pl) {
         if (text.empty()) {
             return invalidInputForm(pl, tr("form.invalidInput.text"));
         }
+        ll::string_utils::replaceAll(text, "\\n", "\n");
         std::string sx      = std::get<std::string>(result.at("pos.x"));
         std::string sy      = std::get<std::string>(result.at("pos.y"));
         std::string sz      = std::get<std::string>(result.at("pos.z"));
@@ -72,7 +75,9 @@ void addForm(Player& pl) {
                 return dynamicForm(pl, text, pos, d);
             } else {
                 createStaticFloatingText(text, pos, d);
-                return pl.sendMessage(tr("floatingText.static.create.success", {text, pos.toString()}));
+                return pl.sendMessage(
+                    tr("command.createStatic.success", {VanillaDimensions::toString(d), pos.toString()})
+                );
             }
         } else {
             return invalidInputForm(pl, tr("form.invalidInput.pos"));
