@@ -1,7 +1,7 @@
 #pragma once
 #include "Global.h"
 
-std::string defaultLanguage_en_US = R"(
+std::string en_US = R"(
     command.floatingtext.reload=All floating texts have been reloaded! \n%1$s static floating texts and %2$s dynamic floating texts are currently reloaded。
     command.floatingtext.description=Create Floating Text
     command.error.invalidCommandOrigin=This command can only be executed by the player!
@@ -31,14 +31,14 @@ std::string defaultLanguage_en_US = R"(
     info.loaded=FloatingText Loaded!
 )";
 
-std::string defaultLanguage_zh_CN = R"(
+std::string zh_CN = R"(
     command.floatingtext.reload=已重载全部悬浮字！\n当前加载了 %1$s 个静态悬浮字和 %2$s 个动态悬浮字。
     command.floatingtext.description=创建悬浮字
     command.error.invalidCommandOrigin=该命令只能由玩家执行！
     command.createStatic.success=已成功在 %1$s 的 %2$s 创建静态悬浮字。
     command.createDynamic.success=已成功在 %1$s 的 %2$s 创建更新周期为 %3$ss 的动态悬浮字。
-    form.invalidInput.title=Invalid Input
-    form.invalidInput.content=Invalid Input！\n%s
+    form.invalidInput.title=非法的输入
+    form.invalidInput.content=非法的输入！\n%s
     form.invalidInput.return=重新输入
     form.invalidInput.exit=退出
     form.closed=表单已关闭

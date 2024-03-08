@@ -17,8 +17,8 @@ void initConfig() {
     std::string langPath     = "./plugins/FloatingText/language/";
     std::string languageCode = Config->getValue<std::string>({"language"}, "en_US");
     Language                 = new GMLIB::Files::I18n::LangI18n(langPath, languageCode);
-    Language->updateOrCreateLanguage("en_US", defaultLanguage_en_US);
-    Language->updateOrCreateLanguage("zh_CN", defaultLanguage_zh_CN);
+    Language->updateOrCreateLanguage("en_US", en_US);
+    Language->updateOrCreateLanguage("zh_CN", zh_CN);
     Language->loadAllLanguages();
     Language->chooseLanguage(languageCode);
 }
