@@ -13,8 +13,8 @@ void invalidInputForm(Player& pl, std::string reason) {
         tr("form.invalidInput.return"),
         tr("form.invalidInput.exit")
     );
-    fm.sendTo(pl, [](Player& pl, ll::form::ModalForm::SelectedButton result) {
-        if (result == ll::form::ModalForm::SelectedButton::Upper) {
+    fm.sendTo(pl, [](Player& pl, ll::form::ModalFormResult result, ll::form::FormCancelReason) {
+        if (result == ll::form::ModalFormSelectedButton::Upper) {
             return addForm(pl);
         }
         return pl.sendMessage(tr("form.closed"));
@@ -25,11 +25,11 @@ void dynamicForm(Player& pl, std::string text, Vec3 pos, int dimId) {
     auto fm = ll::form::CustomForm(tr("form.dynamic.title"));
     fm.appendLabel(tr("form.dynamic.lable"));
     fm.appendInput("rate", tr("form.dynamic.rate"), tr("form.dynamic.rate"));
-    fm.sendTo(pl, [text, pos, dimId](Player& pl, const ll::form::CustomFormResult& result) {
-        if (result.empty()) {
+    fm.sendTo(pl, [text, pos, dimId](Player& pl, const ll::form::CustomFormResult& result, ll::form::FormCancelReason) {
+        if (!result.has_value()) {
             return addForm(pl);
         }
-        std::string srate = std::get<std::string>(result.at("rate"));
+        std::string srate = std::get<std::string>(result->at("rate"));
         if (isNumber(srate)) {
             int rate = std::stoi(srate);
             createDynamicFloatingText(text, pos, dimId, rate);
@@ -51,20 +51,20 @@ void addForm(Player& pl) {
     fm.appendInput("pos.z", tr("form.add.pos.z"), tr("form.add.pos.z"), S(pl.getPosition().z));
     fm.appendInput("pos.d", tr("form.add.pos.d"), tr("form.add.pos.d"), S(pl.getDimensionId().id));
     fm.appendToggle("dynamic", tr("form.add.isDynamic"), false);
-    fm.sendTo(pl, [](Player& pl, const ll::form::CustomFormResult& result) {
-        if (result.empty()) {
+    fm.sendTo(pl, [](Player& pl, const ll::form::CustomFormResult& result, ll::form::FormCancelReason) {
+        if (!result.has_value()) {
             return pl.sendMessage(tr("form.closed"));
         }
-        std::string text = std::get<std::string>(result.at("text"));
+        std::string text = std::get<std::string>(result->at("text"));
         if (text.empty()) {
             return invalidInputForm(pl, tr("form.invalidInput.text"));
         }
         ll::string_utils::replaceAll(text, "\\n", "\n");
-        std::string sx      = std::get<std::string>(result.at("pos.x"));
-        std::string sy      = std::get<std::string>(result.at("pos.y"));
-        std::string sz      = std::get<std::string>(result.at("pos.z"));
-        std::string sd      = std::get<std::string>(result.at("pos.d"));
-        uint64      dynamic = std::get<uint64_t>(result.at("dynamic"));
+        std::string sx      = std::get<std::string>(result->at("pos.x"));
+        std::string sy      = std::get<std::string>(result->at("pos.y"));
+        std::string sz      = std::get<std::string>(result->at("pos.z"));
+        std::string sd      = std::get<std::string>(result->at("pos.d"));
+        uint64      dynamic = std::get<uint64_t>(result->at("dynamic"));
         if (isNumber(sx) && isNumber(sy) && isNumber(sz) && isNumber(sd)) {
             float x = std::stof(sx);
             float y = std::stof(sy);
