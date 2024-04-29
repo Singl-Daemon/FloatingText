@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning(disable : 4267)
+
 #include <include_all.h>
 
 #define PLUGIN_NAME "FloatingText"
@@ -13,9 +15,9 @@ extern void RegisterCommand();
 
 extern std::pair<int, int> getFloatingTextCount();
 
-extern void createStaticFloatingText(std::string text, Vec3 pos, int dimId);
-extern void createDynamicFloatingText(std::string text, Vec3 pos, int dimId, int update);
+extern void createStaticFloatingText(std::string const& text, Vec3 const& pos, int dimId);
+extern void createDynamicFloatingText(std::string const& text, Vec3 const& pos, int dimId, int update);
 
-extern std::string tr(std::string key, std::vector<std::string> data = {});
+extern std::string tr(std::string const& key, std::vector<std::string> const& data = {});
 
 extern void addForm(Player& pl);
