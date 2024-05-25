@@ -1,27 +1,9 @@
-#include "Config.h"
 #include "Global.h"
-#include "Language.h"
-
-GMLIB::Files::JsonConfig*     Config                 = nullptr;
-GMLIB::Files::I18n::LangI18n* Language               = nullptr;
-int                           commandPermissionLevel = 4;
 
 nlohmann::json StaticFloatingTextList;
 nlohmann::json DynamicFloatingTextList;
 
-std::unordered_map<int64, GMLIB::Server::FloatingText*> RuntimeFloatingTexts;
-
-void initConfig() {
-    Config = new GMLIB::Files::JsonConfig("./plugins/FloatingText/config/config.json", defaultConfig);
-    Config->init();
-    std::string langPath     = "./plugins/FloatingText/language/";
-    std::string languageCode = Config->getValue<std::string>({"language"}, "en_US");
-    Language                 = new GMLIB::Files::I18n::LangI18n(langPath, languageCode);
-    Language->updateOrCreateLanguage("en_US", en_US);
-    Language->updateOrCreateLanguage("zh_CN", zh_CN);
-    Language->loadAllLanguages();
-    Language->chooseLanguage(languageCode);
-}
+std::vector<int64> mFloatingTestList;
 
 void initFloatingTexts() {
     StaticFloatingTextList =
@@ -33,9 +15,9 @@ void initFloatingTexts() {
         auto z     = GMLIB::Files::JsonFile::getValue<float>(config, {"Position", "z"}, 0);
         auto dimid = GMLIB::Files::JsonFile::getValue<int>(config, {"Position", "dim"}, 0);
         Vec3 pos{x, y, z};
-        auto ft = new GMLIB::Server::StaticFloatingText(text, pos, dimid, true);
-        // Static
-        RuntimeFloatingTexts[ft->getRuntimeID()] = ft;
+        auto ft = std::make_shared<GMLIB::Server::StaticFloatingText>(text, pos, dimid, true);
+        GMLIB::Server::FloatingTextManager::getInstance().add(ft);
+        mFloatingTestList.push_back(ft->getRuntimeID());
     }
     DynamicFloatingTextList =
         GMLIB::Files::JsonFile::initJson("./plugins/FloatingText/config/DynamicFloatingText.json", defaultDynamicFile);
@@ -47,33 +29,32 @@ void initFloatingTexts() {
         auto dimid  = GMLIB::Files::JsonFile::getValue<int>(config, {"Position", "dim"}, 0);
         auto update = GMLIB::Files::JsonFile::getValue<int>(config, {"UpdateRate"}, 1);
         Vec3 pos{x, y, z};
-        auto ft = new GMLIB::Server::DynamicFloatingText(text, pos, dimid, update, true);
+        auto ft = std::make_shared<GMLIB::Server::DynamicFloatingText>(text, pos, dimid, update, true);
         // Dynamic
-        RuntimeFloatingTexts[ft->getRuntimeID()] = ft;
+        GMLIB::Server::FloatingTextManager::getInstance().add(ft);
+        mFloatingTestList.push_back(ft->getRuntimeID());
     }
 }
 
 void removeAllFloatingTexts() {
-    for (auto& key : RuntimeFloatingTexts) {
-        delete key.second;
+    for (auto& id : mFloatingTestList) {
+        GMLIB::Server::FloatingTextManager::getInstance().remove(id);
     }
-    RuntimeFloatingTexts.clear();
+    mFloatingTestList.clear();
 }
 
 std::pair<int, int> getFloatingTextCount() { return {StaticFloatingTextList.size(), DynamicFloatingTextList.size()}; }
-
-std::string tr(std::string const& key, std::vector<std::string> const& data) { return Language->translate(key, data); }
 
 void createStaticFloatingText(std::string const& text, Vec3 const& pos, int dimId) {
     nlohmann::json json{
         {"Text",     text                                                      },
         {"Position", {{"x", pos.x}, {"y", pos.y}, {"z", pos.z}, {"dim", dimId}}}
     };
-    auto ft = new GMLIB::Server::StaticFloatingText(text, pos, dimId, true);
+    auto ft = std::make_shared<GMLIB::Server::StaticFloatingText>(text, pos, dimId, true);
     StaticFloatingTextList.push_back(json);
     std::string path = "./plugins/FloatingText/config/StaticFloatingText.json";
     GMLIB::Files::JsonFile::writeFile(path, StaticFloatingTextList);
-    RuntimeFloatingTexts[ft->getRuntimeID()] = ft;
+    mFloatingTestList.push_back(ft->getRuntimeID());
 }
 
 void createDynamicFloatingText(std::string const& text, Vec3 const& pos, int dimId, int update) {
@@ -82,9 +63,9 @@ void createDynamicFloatingText(std::string const& text, Vec3 const& pos, int dim
         {"UpdateRate", update                                                    },
         {"Position",   {{"x", pos.x}, {"y", pos.y}, {"z", pos.z}, {"dim", dimId}}}
     };
-    auto ft = new GMLIB::Server::DynamicFloatingText(text, pos, dimId, update, true);
+    auto ft = std::make_shared<GMLIB::Server::DynamicFloatingText>(text, pos, dimId, update, true);
     DynamicFloatingTextList.push_back(json);
     std::string path = "./plugins/FloatingText/config/DynamicFloatingText.json";
     GMLIB::Files::JsonFile::writeFile(path, DynamicFloatingTextList);
-    RuntimeFloatingTexts[ft->getRuntimeID()] = ft;
+    mFloatingTestList.push_back(ft->getRuntimeID());
 }

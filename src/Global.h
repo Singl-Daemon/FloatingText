@@ -1,6 +1,8 @@
 #pragma once
 #pragma warning(disable : 4267)
 
+#include "Config.h"
+#include "Language.h"
 #include <include_all.h>
 
 #define PLUGIN_NAME "FloatingText"
@@ -9,7 +11,6 @@
 extern ll::Logger logger;
 
 extern void removeAllFloatingTexts();
-extern void initConfig();
 extern void initFloatingTexts();
 extern void RegisterCommand();
 

@@ -1,8 +1,9 @@
 #pragma once
-
-#include <ll/api/plugin/NativePlugin.h>
+#include "Global.h"
 
 namespace FloatingText {
+
+using namespace GMLIB::Files::I18n;
 
 class Entry {
 
@@ -25,9 +26,14 @@ public:
     // /// @return True if the plugin is unloaded successfully.
     bool unload();
 
+    Config& getConfig();
+
+    LangI18n& getI18n();
+
 private:
     ll::plugin::NativePlugin& mSelf;
+    std::optional<Config>     mConfig;
+    std::optional<LangI18n>   mI18n;
 };
 
 } // namespace FloatingText
-

@@ -1,11 +1,12 @@
 #pragma once
-#include "Global.h"
+#include <iostream>
 
-std::string defaultConfig = R"({
-    "language": "en_US"
-})";
+struct Config {
+    int         version  = 1;
+    std::string language = "en_US";
+};
 
-std::string defaultStaticFile = R"([
+inline std::string defaultStaticFile = R"([
     {
         "Text": "Example Static Text 1",
         "Position": {
@@ -26,7 +27,7 @@ std::string defaultStaticFile = R"([
     }
 ])";
 
-std::string defaultDynamicFile = R"([
+inline std::string defaultDynamicFile = R"([
     {
         "Text": "Player Name: %player_realname%\nServer Mspt: %server_mspt%",
         "UpdateRate": 1,

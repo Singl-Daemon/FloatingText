@@ -1,5 +1,4 @@
 #include "Entry.h"
-#include "Global.h"
 
 ll::Logger logger(PLUGIN_NAME);
 
@@ -10,12 +9,17 @@ std::unique_ptr<Entry>& Entry::getInstance() {
     return instance;
 }
 
-bool Entry::load() {
-    initConfig();
-    return true;
-}
+bool Entry::load() { return true; }
 
 bool Entry::enable() {
+    mConfig.emplace();
+    if (!ll::config::loadConfig(*mConfig, getSelf().getConfigDir())) {
+        ll::config::saveConfig(*mConfig, getSelf().getConfigDir());
+    }
+    mI18n.emplace(getSelf().getLangDir(), mConfig->language);
+    mI18n->updateOrCreateLanguage("en_US", en_US);
+    mI18n->updateOrCreateLanguage("zh_CN", zh_CN);
+    mI18n->loadAllLanguages();
     initFloatingTexts();
     RegisterCommand();
     logger.info(tr("info.loaded"));
@@ -26,6 +30,8 @@ bool Entry::enable() {
 
 bool Entry::disable() {
     removeAllFloatingTexts();
+    mConfig.reset();
+    mI18n.reset();
     return true;
 }
 
@@ -34,6 +40,14 @@ bool Entry::unload() {
     return true;
 }
 
+Config& Entry::getConfig() { return mConfig.value(); }
+
+LangI18n& Entry::getI18n() { return mI18n.value(); }
+
 } // namespace FloatingText
 
 LL_REGISTER_PLUGIN(FloatingText::Entry, FloatingText::Entry::getInstance());
+
+std::string tr(std::string const& key, std::vector<std::string> const& data) {
+    return FloatingText::Entry::getInstance()->getI18n().get(key, data);
+}
