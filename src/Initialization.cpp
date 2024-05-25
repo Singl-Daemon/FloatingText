@@ -51,9 +51,9 @@ void createStaticFloatingText(std::string const& text, Vec3 const& pos, int dimI
         {"Position", {{"x", pos.x}, {"y", pos.y}, {"z", pos.z}, {"dim", dimId}}}
     };
     auto ft = std::make_shared<GMLIB::Server::StaticFloatingText>(text, pos, dimId, true);
+    GMLIB::Server::FloatingTextManager::getInstance().add(ft);
     StaticFloatingTextList.push_back(json);
-    std::string path = "./plugins/FloatingText/config/StaticFloatingText.json";
-    GMLIB::Files::JsonFile::writeFile(path, StaticFloatingTextList);
+    GMLIB::Files::JsonFile::writeFile("./plugins/FloatingText/config/StaticFloatingText.json", StaticFloatingTextList);
     mFloatingTestList.push_back(ft->getRuntimeID());
 }
 
@@ -64,8 +64,11 @@ void createDynamicFloatingText(std::string const& text, Vec3 const& pos, int dim
         {"Position",   {{"x", pos.x}, {"y", pos.y}, {"z", pos.z}, {"dim", dimId}}}
     };
     auto ft = std::make_shared<GMLIB::Server::DynamicFloatingText>(text, pos, dimId, update, true);
+    GMLIB::Server::FloatingTextManager::getInstance().add(ft);
     DynamicFloatingTextList.push_back(json);
-    std::string path = "./plugins/FloatingText/config/DynamicFloatingText.json";
-    GMLIB::Files::JsonFile::writeFile(path, DynamicFloatingTextList);
+    GMLIB::Files::JsonFile::writeFile(
+        "./plugins/FloatingText/config/DynamicFloatingText.json",
+        DynamicFloatingTextList
+    );
     mFloatingTestList.push_back(ft->getRuntimeID());
 }

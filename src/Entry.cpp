@@ -13,8 +13,8 @@ bool Entry::load() { return true; }
 
 bool Entry::enable() {
     mConfig.emplace();
-    if (!ll::config::loadConfig(*mConfig, getSelf().getConfigDir())) {
-        ll::config::saveConfig(*mConfig, getSelf().getConfigDir());
+    if (!ll::config::loadConfig(*mConfig, getSelf().getConfigDir() / u8"config.json")) {
+        ll::config::saveConfig(*mConfig, getSelf().getConfigDir() / u8"config.json");
     }
     mI18n.emplace(getSelf().getLangDir(), mConfig->language);
     mI18n->updateOrCreateLanguage("en_US", en_US);
