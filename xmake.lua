@@ -4,7 +4,7 @@ add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
 
 add_requires(
-    "levilamina", {configs = {target_type = "server"}},
+    "levilamina 1.0.1", {configs = {target_type = "server"}},
     "gmlib 0.13.10"
 )
 
