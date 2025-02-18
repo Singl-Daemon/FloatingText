@@ -5,9 +5,8 @@
 
 #include <mc/world/actor/player/Player.h>
 
-#define PLUGIN_NAME "FloatingText"
-
 namespace FloatingText {
+
 static auto                logger = &Entry::getInstance().getSelf().getLogger();
 extern std::pair<int, int> getFloatingTextCount();
 extern std::string         tr(std::string const& key, std::vector<std::string> const& data = {});

@@ -3,12 +3,16 @@
 
 ## 安装
 
-### 使用包管理器安装
+[//]: # (### 使用包管理器安装)
 
-```bash
-lip install github.com/GroupMountain/FloatingText
-```
-### 手动安装
+[//]: # ()
+[//]: # (```bash)
+
+[//]: # (lip install github.com/GroupMountain/FloatingText)
+
+[//]: # (```)
+
+[//]: # (### 手动安装)
 
 1. 安装[GMLIB](https://github.com/GroupMountain/GMLIB-Release/releases)。
 2. 在[Releases](https://github.com/GroupMountain/FloatingText/releases)页面下载最新版本的插件。
